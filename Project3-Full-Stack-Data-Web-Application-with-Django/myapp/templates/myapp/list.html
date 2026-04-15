@@ -1,0 +1,14 @@
+{% extends "core/base.html"%}
+
+{%block content%}
+<h1>Tasks</h1>
+<ul>
+    {% for task in tasks %}
+    <a href="{%url 'task_detail' task.pk %}">
+      <li>  {{task.title}} - {% if task.is_done%}Done {% else %}Pending {%endif%} </li>
+    </a>
+    {% empty %}
+    <p>No tasks yet.</p>
+    {% endfor %}
+</ul>
+{%endblock%}

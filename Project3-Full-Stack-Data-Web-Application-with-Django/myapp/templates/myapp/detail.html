@@ -1,0 +1,12 @@
+{% extends "core/base.html"%}
+
+{%block content%}
+<h1> {{task.title}}</h1>
+<p> Status : {% if task.is_done%}Done {% else %}Pending {%endif%}</p>
+<p> Created at: {{task.created_at}}</p>
+<p> Priority : {{task.priority}}</p>
+
+
+<p> <a href="{%url 'task_list'%}">Back to all tasks</a></p>
+
+{%endblock%}

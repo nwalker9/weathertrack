@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <title> {%block title %} Group 12, Project 3 {%endblock%}</title>
+    </header>
+    <body>
+        <nav>
+            <a href="{%url 'home'%}"> Home </a>
+            <a href="{%url 'about'%}"> About </a>
+            <a href="{%url 'items'%}"> Items </a>
+             <a href="{%url 'students'%}"> Students </a>
+        </nav>
+
+        {%block content%}
+        {%endblock%}
+
+    </body>
+</html>
