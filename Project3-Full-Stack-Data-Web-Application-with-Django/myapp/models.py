@@ -1,11 +1,55 @@
 from django.db import models
-
-# Create your models here.
-class Task(models.Model):
-    title = models.CharField(max_length= 200)
-    is_done = models.BooleanField(default=False)
-    priority = models.IntegerField(default = 0)
-    created_at = models.DateTimeField(auto_now_add=True)
-
+from django.core.validators import MinValueValidator, MaxValueValidator
+ 
+ 
+class City(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    latitude = models.FloatField()
+    longitude = models.FloatField()
+ 
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'cities'
+ 
     def __str__(self):
-        return f"{self.title} - ({'done' if self.is_done else 'pending'})"
+        return self.name
+ 
+ 
+class WeatherRecord(models.Model):
+    SOURCE_CHOICES = [
+        ('csv', 'CSV Import'),
+        ('api', 'API Fetch'),
+    ]
+ 
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='records')
+    date = models.DateField()
+    temperature_max = models.FloatField(
+        validators=[MinValueValidator(-60), MaxValueValidator(60)]
+    )
+    temperature_min = models.FloatField(
+        validators=[MinValueValidator(-60), MaxValueValidator(60)]
+    )
+    precipitation_sum = models.FloatField(default=0.0)
+    wind_speed_max = models.FloatField(default=0.0)
+    source = models.CharField(max_length=10, choices=SOURCE_CHOICES, default='csv')
+    created_at = models.DateTimeField(auto_now_add=True)
+ 
+    class Meta:
+        ordering = ['-date']
+        unique_together = ['city', 'date']
+ 
+    def __str__(self):
+        return f"{self.city.name} — {self.date}"
+ 
+ 
+class DataRun(models.Model):
+    run_timestamp = models.DateTimeField(auto_now_add=True)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='runs')
+    records_fetched = models.IntegerField(default=0)
+    source = models.CharField(max_length=10, choices=WeatherRecord.SOURCE_CHOICES, default='api')
+ 
+    class Meta:
+        ordering = ['-run_timestamp']
+ 
+    def __str__(self):
+        return f"{self.city.name} — {self.run_timestamp:%Y-%m-%d %H:%M}"
