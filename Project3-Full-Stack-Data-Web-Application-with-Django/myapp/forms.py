@@ -27,4 +27,3 @@ class WeatherRecordForm(forms.ModelForm):
                     'Minimum temperature cannot be greater than maximum temperature.'
                 )
         return cleaned_data
- 

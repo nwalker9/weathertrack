@@ -1,8 +1,20 @@
 {% extends 'myapp/base.html' %}
 
 {% block content %}
-<div class="card p-4">
-<h2>Welcome</h2>
-<p>This project analyzes our datasets using Django.</p>
+
+<div class="card p-4 shadow">
+
+<h2>Florida Weather Dashboard</h2>
+
+<p>Analyze weather trends for Tallahassee, Miami, Orlando, and more.</p>
+
+<p>Total Cities: <strong>{{ city_count }}</strong></p>
+<p>Total Records: <strong>{{ record_count }}</strong></p>
+
+<a href="{% url 'record_list' %}" class="btn btn-primary">
+View Records
+</a>
+
 </div>
+
 {% endblock %}

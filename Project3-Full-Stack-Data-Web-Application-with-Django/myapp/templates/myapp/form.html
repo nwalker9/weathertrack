@@ -2,11 +2,13 @@
 
 {% block content %}
 
+<h2>Add / Edit Weather Record</h2>
+
 <form method="post">
 {% csrf_token %}
 {{ form.as_p }}
 
-<button class="btn btn-primary">Save</button>
+<button class="btn btn-success">Save</button>
 </form>
 
 {% endblock %}

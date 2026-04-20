@@ -1,50 +1,70 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import ListView, DetailView
-from .models import Task
-
-# from django.http import HttpResponse
-
-# # Create your views here.
-# def home(request):
-#     return HttpResponse("Hello, Django!")
-
-
-# def home(request):
-#     context = {"message" : "This came from the view"}
-#     return render(request, "core/home.html", context)
+from .models import WeatherRecord, City
+from .forms import WeatherRecordForm
 
 def home(request):
-    return render(request, "core/home.html")
+    city_count = City.objects.count()
+    record_count = WeatherRecord.objects.count()
 
+    return render(request, 'myapp/home.html', {
+        'city_count': city_count,
+        'record_count': record_count
+    })
+
+def record_list(request):
+    records = WeatherRecord.objects.select_related('city').all()
+
+    paginator = Paginator(records, 20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'myapp/list.html', {
+        'page_obj': page_obj
+    })
+
+def record_detail(request, pk):
+    record = get_object_or_404(WeatherRecord, pk=pk)
+
+    return render(request, 'myapp/detail.html', {
+        'record': record
+    })
+
+def record_create(request):
+    if request.method == 'POST':
+        form = WeatherRecordForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('record_list')
+    else:
+        form = WeatherRecordForm()
+
+    return render(request, 'myapp/form.html', {'form': form})
+
+def record_delete(request, pk):
+    record = get_object_or_404(WeatherRecord, pk=pk)
+
+    if request.method == 'POST':
+        record.delete()
+        return redirect('record_list')
+
+    return render(request, 'myapp/confirm_delete.html', {
+        'record': record
+    })
 
 def about(request):
     return render(request, "core/about.html")
 
-def items(request):
-    data = [{"name": "Notebook", "category": "Supplies", "price": 2.99},
-            {"name": "Mouse", "category": "Electronics", "price": 12.99},
-            {"name": "Bottle", "category": "Accessories", "price": 8.25},
-            ]
-    return render(request, "core/items.html", {"items": data})
-
-
-
-def students(request):
-    data = [{"name": "Ava", "major": "CS", "GPA": 3.99},
-            {"name": "Aidan", "major": "Math", "GPA": 3.4} ]
-    return render(request, "core/students.html", {"student_data":data})
-
-
-class TaskListView(ListView):
+"""class TaskListView(ListView):
     model = Task
     template_name = "core/task_list.html"
     context_object_name = 'tasks'
 
     def get_queryset(self):
-        return Task.objects.filter(is_done=True)
+        return Task.objects.filter(is_done=True)"""
 
 
-class TaskDetailView(DetailView):
+"""class TaskDetailView(DetailView):
     model = Task
     template_name = "core/task_detail.html"
-    context_object_name = 'task'    
+    context_object_name = 'task'   """ 
