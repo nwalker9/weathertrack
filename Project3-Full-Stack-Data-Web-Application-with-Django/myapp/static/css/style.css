@@ -3,18 +3,14 @@ body {
     font-family: 'Segoe UI', sans-serif;
 }
 
-.navbar {
-    background-color: #1a1a2e !important;
+.navbar-dark {
+    background-color: #1a1a2e;
     margin-bottom: 20px;
 }
 
 .navbar-brand {
-    color: #00bcbc !important;
+    color: #00bcbc;
     font-weight: bold;
-}
-
-.nav-link {
-    color: white !important;
 }
 
 .table thead th {
