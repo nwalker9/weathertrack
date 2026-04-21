@@ -1,20 +1,44 @@
-.navbar{
-    background: #789;
-    text-decoration: none;
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.navbar a{
-    color: white
+.navbar {
+    background-color: #1a1a2e !important;
+    margin-bottom: 20px;
 }
 
-.navbar a:visited{
-    color: purple
+.navbar-brand {
+    color: #00bcbc !important;
+    font-weight: bold;
 }
 
-.navbar a:hover{
-    color: green
+.nav-link {
+    color: white !important;
 }
 
-body{
-    background-color: #17cded;
+.table thead th {
+    background-color: #1a1a2e;
+    color: #00bcbc;
+}
+
+.form-control:focus {
+    border-color: #00bcbc;
+    box-shadow: 0 0 0 2px rgba(0, 188, 188, 0.25);
+}
+
+.card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+    background-color: #00bcbc;
+    border-color: #00bcbc;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #009999;
+    border-color: #009999;
 }
