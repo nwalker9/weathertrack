@@ -5,22 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>{% block title %}Weather Dashboard — Group 12{% endblock %}</title>
 
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-  <!-- Bootstrap 5 -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-  <!-- Bootstrap Icons -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 
-  <!-- Custom CSS -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark wt-navbar sticky-top">
     <div class="container">
 
@@ -28,7 +23,6 @@
         <i class="bi bi-cloud-lightning-rain-fill me-2"></i>WeatherTrack
       </a>
 
-      <!-- Mobile hamburger button -->
       <button class="navbar-toggler" type="button"
               data-bs-toggle="collapse" data-bs-target="#mainNav"
               aria-controls="mainNav" aria-expanded="false"
@@ -68,7 +62,6 @@
     </div>
   </nav>
 
-  <!-- FLASH MESSAGES -->
   {% if messages %}
   <div class="container mt-3">
     {% for message in messages %}
@@ -80,14 +73,12 @@
   </div>
   {% endif %}
 
-  <!-- PAGE CONTENT -->
   <main class="wt-main">
     <div class="container mt-4 mb-5">
       {% block content %}{% endblock %}
     </div>
   </main>
 
-  <!-- FOOTER -->
   <footer class="wt-footer">
     <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
       <span class="wt-brand" style="font-size:1rem;">
@@ -97,7 +88,6 @@
     </div>
   </footer>
 
-  <!-- Bootstrap JS bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   {% block extra_js %}{% endblock %}
 
