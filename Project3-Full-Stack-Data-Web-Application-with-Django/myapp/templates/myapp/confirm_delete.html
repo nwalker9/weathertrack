@@ -1,14 +1,65 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}WeatherTrack — Delete Record{% endblock %}
 
 {% block content %}
 
-<h3>Delete {{ record.name }}?</h3>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
 
-<p>{{ record.city.name }} - {{ record.date }}</p>
+    <div class="card wt-detail-card">
+      <div class="card-header wt-detail-header" style="background:#3a0a0a !important; border-color:#dc3545 !important;">
+        <h5 class="mb-0" style="color:#ff6b6b !important;">
+          <i class="bi bi-trash me-2"></i>Delete Record
+        </h5>
+      </div>
+      <div class="card-body p-4 text-center">
 
-<form method="post">
-{% csrf_token %}
-<button class="btn btn-danger">Confirm Delete</button>
-</form>
+        <!-- Warning icon -->
+        <div class="wt-delete-icon-wrap mx-auto mb-3">
+          <i class="bi bi-exclamation-triangle-fill wt-delete-icon"></i>
+        </div>
+
+        <h4 class="fw-bold mb-2">Are you sure?</h4>
+        <p class="text-muted mb-4">
+          You are about to permanently delete this weather record.
+          This action cannot be undone.
+        </p>
+
+        <!-- Record summary -->
+        <div class="card mb-4" style="background:#f8f9fa; border:1px solid #e0eaf4; border-radius:8px;">
+          <div class="card-body py-3 px-4">
+            <dl class="row text-start mb-0 wt-dl">
+              <dt class="col-5">City</dt>
+              <dd class="col-7">
+                <span class="wt-city-badge">{{ record.city.name }}</span>
+              </dd>
+              <dt class="col-5">Date</dt>
+              <dd class="col-7">{{ record.date }}</dd>
+              <dt class="col-5">High Temp</dt>
+              <dd class="col-7 wt-temp-hot">{{ record.temperature_max }} °C</dd>
+            </dl>
+          </div>
+        </div>
+
+        <!-- Confirm form -->
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex gap-3 justify-content-center">
+            <button type="submit" class="btn btn-danger px-4" style="border-radius:8px; font-weight:700;">
+              <i class="bi bi-trash me-2"></i>Yes, Delete It
+            </button>
+            <a href="{% url 'record_detail' record.pk %}" class="btn wt-btn-outline px-4">
+              <i class="bi bi-arrow-left me-1"></i>Cancel
+            </a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+  </div>
+</div>
 
 {% endblock %}

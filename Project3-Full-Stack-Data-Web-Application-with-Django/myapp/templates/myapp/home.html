@@ -1,19 +1,124 @@
 {% extends 'myapp/base.html' %}
+{% load static %}
+
+{% block title %}WeatherTrack — Home{% endblock %}
 
 {% block content %}
 
-<div class="card p-4 shadow">
+<!-- HERO -->
+<div class="wt-hero rounded-3 mb-5 p-5">
+  <div class="row align-items-center">
+    <div class="col-lg-7">
+      <p class="wt-hero-eyebrow">CIS4930 · Group 12 · Project 3</p>
+      <h1 class="wt-hero-title">Florida Weather<br>Dashboard</h1>
+      <p class="wt-hero-desc">
+        Analyze weather trends for Tallahassee, Miami, Orlando, and more.
+        Live data powered by the Open-Meteo API.
+      </p>
+      <div class="d-flex flex-wrap gap-3 mt-4">
+        <a href="{% url 'record_list' %}" class="btn wt-btn-primary">
+          <i class="bi bi-table me-2"></i>View Records
+        </a>
+        <a href="{% url 'analytics' %}" class="btn wt-btn-outline">
+          <i class="bi bi-bar-chart-line me-2"></i>Analytics
+        </a>
+      </div>
+    </div>
+    <div class="col-lg-5 text-center mt-4 mt-lg-0">
+      <i class="bi bi-cloud-sun-rain wt-hero-icon"></i>
+    </div>
+  </div>
+</div>
 
-<h2>Florida Weather Dashboard</h2>
+<!-- STAT CARDS -->
+<div class="row g-4 mb-5">
 
-<p>Analyze weather trends for Tallahassee, Miami, Orlando, and more.</p>
+  <div class="col-md-4">
+    <div class="card wt-stat-card h-100">
+      <div class="card-body text-center p-4">
+        <i class="bi bi-geo-alt-fill wt-stat-icon mb-3 d-block"></i>
+        <h3 class="wt-stat-number">{{ city_count }}</h3>
+        <p class="wt-stat-label mb-1">Cities Tracked</p>
+        <p class="wt-stat-detail">Tallahassee · Miami · Orlando</p>
+      </div>
+    </div>
+  </div>
 
-<p>Total Cities: <strong>{{ city_count }}</strong></p>
-<p>Total Records: <strong>{{ record_count }}</strong></p>
+  <div class="col-md-4">
+    <div class="card wt-stat-card wt-stat-card--accent h-100">
+      <div class="card-body text-center p-4">
+        <i class="bi bi-thermometer-half wt-stat-icon mb-3 d-block"></i>
+        <h3 class="wt-stat-number">{{ record_count }}</h3>
+        <p class="wt-stat-label mb-1">Weather Records</p>
+        <p class="wt-stat-detail">Temperature · Rain · Wind</p>
+      </div>
+    </div>
+  </div>
 
-<a href="{% url 'record_list' %}" class="btn btn-primary">
-View Records
-</a>
+  <div class="col-md-4">
+    <div class="card wt-stat-card h-100">
+      <div class="card-body text-center p-4">
+        <i class="bi bi-cloud-download-fill wt-stat-icon mb-3 d-block"></i>
+        <h3 class="wt-stat-number">Live</h3>
+        <p class="wt-stat-label mb-1">API Integration</p>
+        <p class="wt-stat-detail">Open-Meteo Weather API</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FEATURE CARDS -->
+<h2 class="wt-section-title mb-4">What This App Does</h2>
+<div class="row g-4">
+
+  <div class="col-md-6 col-lg-3">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-database-fill-add wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">Data Collection</h5>
+        <p class="wt-feature-desc">
+          Ingests daily weather data via the Open-Meteo API for multiple cities.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-3">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-pencil-square wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">Full CRUD</h5>
+        <p class="wt-feature-desc">
+          Create, view, edit, and delete weather records through a clean interface.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-3">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-graph-up-arrow wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">Analytics</h5>
+        <p class="wt-feature-desc">
+          Pandas-powered aggregations rendered as interactive Chart.js charts.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-lg-3">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-search wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">EDA Insights</h5>
+        <p class="wt-feature-desc">
+          Answers research questions from Project 1's exploratory data analysis.
+        </p>
+      </div>
+    </div>
+  </div>
 
 </div>
 

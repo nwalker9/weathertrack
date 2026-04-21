@@ -1,56 +1,105 @@
 <!DOCTYPE html>
-<html>
-    <header>
-        <title> {%block title %} Group 12, Project 3 {%endblock%}</title>
-    </header>
-    <body>
-        <nav>
-            <a href="{%url 'home'%}"> Home </a>
-            <a href="{%url 'about'%}"> About </a>
-            <a href="{%url 'items'%}"> Items </a>
-             <a href="{%url 'students'%}"> Students </a>
-        </nav>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Weather Dashboard — Group 12{% endblock %}</title>
 
-        {%block content%}
-        {%endblock%}
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 
-    </body>
-</html>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
 
-<!DOCTYPE html>
-<html>
-    <header>
-        <title>{%block title %} Group 12, Project 3 {%endblock%} </title>
-    </header>
-    
-    </header>
-    <head>
-        <title>Dashboard</title>
-    </head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"/>
 
-    <body>
+  <!-- Custom CSS -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+</head>
+<body>
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-dark wt-navbar sticky-top">
+    <div class="container">
 
-        <a class="navbar-brand" href="{% url 'home' %}">
-        Weather Dashboard
-        </a>
+      <a class="navbar-brand wt-brand" href="{% url 'home' %}">
+        <i class="bi bi-cloud-lightning-rain-fill me-2"></i>WeatherTrack
+      </a>
 
-        <div>
-            <a class="nav-link text-white d-inline" href="{% url 'record_list' %}">Records</a>
-            <a class="nav-link text-white d-inline" href="{% url 'record_create' %}">Add Record</a>
-        </div>
+      <!-- Mobile hamburger button -->
+      <button class="navbar-toggler" type="button"
+              data-bs-toggle="collapse" data-bs-target="#mainNav"
+              aria-controls="mainNav" aria-expanded="false"
+              aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
+      <div class="collapse navbar-collapse" id="mainNav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center gap-lg-1">
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home' %}">
+              <i class="bi bi-house-door me-1"></i>Home
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'record_list' %}">
+              <i class="bi bi-table me-1"></i>Records
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'analytics' %}">
+              <i class="bi bi-bar-chart-line me-1"></i>Analytics
+            </a>
+          </li>
+
+          <li class="nav-item ms-lg-2">
+            <a class="btn wt-btn-add" href="{% url 'record_create' %}">
+              <i class="bi bi-plus-circle me-1"></i>Add Record
+            </a>
+          </li>
+
+        </ul>
+      </div>
     </div>
-    </nav>
+  </nav>
 
-    <div class="container mt-4">
-    {% block content %}
-    {% endblock %}
+  <!-- FLASH MESSAGES -->
+  {% if messages %}
+  <div class="container mt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show wt-alert" role="alert">
+      <i class="bi bi-info-circle me-2"></i>{{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+    {% endfor %}
+  </div>
+  {% endif %}
 
-    </body>
+  <!-- PAGE CONTENT -->
+  <main class="wt-main">
+    <div class="container mt-4 mb-5">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="wt-footer">
+    <div class="container d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <span class="wt-brand" style="font-size:1rem;">
+        <i class="bi bi-cloud-lightning-rain-fill me-1"></i>WeatherTrack
+      </span>
+      <span class="wt-footer-sub">Group 12 · CIS4930 · Tallahassee · Miami · Orlando</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+
+</body>
 </html>

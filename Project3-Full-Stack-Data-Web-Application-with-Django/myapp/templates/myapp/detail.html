@@ -1,19 +1,88 @@
-{% extends "myapp/base.html"%}
+{% extends "myapp/base.html" %}
+{% load static %}
 
-{%block content%}
+{% block title %}WeatherTrack — {{ record.city.name }} {{ record.date }}{% endblock %}
 
-<div class="card p-4">
+{% block content %}
 
-<h1> {{ record.city.name }} — {{ record.date }}</h1>
-<p> High Temp: {{ record.temperature_max }} C</p>
-<p> Low Temp: {{ record.temperature_min }} C</p>
-<p> Rainfall: {{ record.precipitation_sum }} mm</p>
-<p> Wind Speed: {{ record.wind_speed_max }} km/h</p>
-<p> Source: {{ record.get_source_display }}</p>
+<div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+  <h2 class="wt-page-title mb-0">
+    <i class="bi bi-cloud-sun me-2"></i>{{ record.city.name }} — {{ record.date }}
+  </h2>
+  <a href="{% url 'record_list' %}" class="btn wt-btn-outline">
+    <i class="bi bi-arrow-left me-1"></i>Back to Records
+  </a>
+</div>
 
-<p> <a href="{% url 'record_update' record.pk %}" class="btn btn-warning">Edit</a> </p>
-<p> <a href="{% url 'record_delete' record.pk %}" class="btn btn-danger">Delete</a> </p>
+<div class="row g-4">
+
+  <!-- DETAIL CARD -->
+  <div class="col-lg-8">
+    <div class="card wt-detail-card">
+      <div class="card-header wt-detail-header">
+        <h5 class="mb-0"><i class="bi bi-info-circle me-2"></i>Weather Data</h5>
+      </div>
+      <div class="card-body p-4">
+        <dl class="row wt-dl">
+
+          <dt class="col-sm-4"><i class="bi bi-geo-alt-fill me-1"></i>City</dt>
+          <dd class="col-sm-8">
+            <span class="wt-city-badge">{{ record.city.name }}</span>
+          </dd>
+
+          <dt class="col-sm-4"><i class="bi bi-calendar3 me-1"></i>Date</dt>
+          <dd class="col-sm-8">{{ record.date }}</dd>
+
+          <dt class="col-sm-4"><i class="bi bi-thermometer-high me-1"></i>High Temp</dt>
+          <dd class="col-sm-8 wt-temp-hot fw-semibold">{{ record.temperature_max }} °C</dd>
+
+          <dt class="col-sm-4"><i class="bi bi-thermometer-low me-1"></i>Low Temp</dt>
+          <dd class="col-sm-8 wt-temp-cool fw-semibold">{{ record.temperature_min }} °C</dd>
+
+          <dt class="col-sm-4"><i class="bi bi-cloud-rain me-1"></i>Rainfall</dt>
+          <dd class="col-sm-8">{{ record.precipitation_sum }} mm</dd>
+
+          <dt class="col-sm-4"><i class="bi bi-wind me-1"></i>Wind Speed</dt>
+          <dd class="col-sm-8">{{ record.wind_speed_max }} km/h</dd>
+
+          <dt class="col-sm-4"><i class="bi bi-tag me-1"></i>Source</dt>
+          <dd class="col-sm-8">
+            {% if record.source == 'api' %}
+              <span class="badge wt-source-api">API Fetch</span>
+            {% else %}
+              <span class="badge wt-source-csv">CSV Import</span>
+            {% endif %}
+          </dd>
+
+        </dl>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONS CARD -->
+  <div class="col-lg-4">
+    <div class="card wt-detail-card">
+      <div class="card-header wt-detail-header">
+        <h5 class="mb-0"><i class="bi bi-gear me-2"></i>Actions</h5>
+      </div>
+      <div class="card-body p-4 d-grid gap-3">
+        <a href="{% url 'record_update' record.pk %}" class="btn wt-btn-primary">
+          <i class="bi bi-pencil me-2"></i>Edit Record
+        </a>
+        <a href="{% url 'record_delete' record.pk %}" class="btn btn-outline-danger">
+          <i class="bi bi-trash me-2"></i>Delete Record
+        </a>
+        <hr class="my-1">
+        <a href="{% url 'record_list' %}" class="btn wt-btn-outline">
+          <i class="bi bi-table me-2"></i>All Records
+        </a>
+        <a href="{% url 'record_create' %}" class="btn wt-btn-outline">
+          <i class="bi bi-plus-circle me-2"></i>Add New Record
+        </a>
+      </div>
+    </div>
+  </div>
 
 </div>
 
-{%endblock%}
+{% endblock %}
