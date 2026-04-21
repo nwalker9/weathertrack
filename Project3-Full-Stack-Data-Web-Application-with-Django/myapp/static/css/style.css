@@ -1,0 +1,20 @@
+.navbar{
+    background: #789;
+    text-decoration: none;
+}
+
+.navbar a{
+    color: white
+}
+
+.navbar a:visited{
+    color: purple
+}
+
+.navbar a:hover{
+    color: green
+}
+
+body{
+    background-color: #17cded;
+}
