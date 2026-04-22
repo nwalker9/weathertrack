@@ -15,10 +15,10 @@
 ## Screenshots
 
 ### Homepage
-![Homepage](screenshots/homepage.png)
+![Homepage](screenshots/homepage.png.png)
 
 ### Records
-![Records](screenshots/records.png)
+![Records](screenshots/records.png.png)
 
 ### Analytics
-![Analytics](screenshots/Analytics.png)
+![Analytics](screenshots/Analytics.png.png)
