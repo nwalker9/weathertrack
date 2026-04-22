@@ -21,4 +21,4 @@
 ![Records](screenshots/records.png)
 
 ### Analytics
-![Analytics](screenshots/analytics.png)
+![Analytics](screenshots/Analytics.png)
