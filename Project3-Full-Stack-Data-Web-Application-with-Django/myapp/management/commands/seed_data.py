@@ -10,7 +10,7 @@ CITIES_META = {
     'Atlanta':     {'latitude': 33.7490, 'longitude': -84.3880},
 }
 
-CSV_PATH = Path(__file__).resolve().parents[4] / 'data' / 'raw' / 'weather_data.csv'
+CSV_PATH = Path(__file__).resolve().parents[3] / 'data' / 'raw' / 'weather_data.csv'
 
 
 class Command(BaseCommand):
