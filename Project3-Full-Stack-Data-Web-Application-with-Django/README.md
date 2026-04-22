@@ -7,3 +7,18 @@
 - API & analytics lead: Whoever can when they have time/all the above.
 
 ## Project Description
+
+
+
+
+
+## Screenshots
+
+### Homepage
+![Homepage](screenshots/homepage.png)
+
+### Records
+![Records](screenshots/records.png)
+
+### Analytics
+![Analytics](screenshots/analytics.png)
