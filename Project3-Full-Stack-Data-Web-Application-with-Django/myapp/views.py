@@ -22,11 +22,17 @@ def home(request):
 
 
 def record_list(request):
+    query = request.GET.get('q', '')
     records = WeatherRecord.objects.select_related('city').all()
+    if query:
+        records = records.filter(city__name__icontains=query)
     paginator = Paginator(records, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    return render(request, 'myapp/list.html', {'page_obj': page_obj})
+    return render(request, 'myapp/list.html', {
+        'page_obj': page_obj,
+        'query': query,
+    })
 
 
 def record_detail(request, pk):
