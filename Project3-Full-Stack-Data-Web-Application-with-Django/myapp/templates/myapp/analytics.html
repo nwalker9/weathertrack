@@ -1,242 +1,150 @@
-{% extends 'myapp/base.html' %}
+
+{% extends "myapp/base.html" %}
 {% load static %}
 
-{% block title %}WeatherTrack — Analytics{% endblock %}
+{% block title %}Analytics Dashboard{% endblock %}
 
 {% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Analytics Dashboard</h1>
 
-<div class="mb-4">
-  <h2 class="wt-page-title mb-1">
-    <i class="bi bi-bar-chart-line me-2"></i>Analytics Dashboard
-  </h2>
-  <p class="text-muted mb-0">
-    Pandas-powered aggregations from the weather database
-  </p>
-</div>
-
-<!-- SUMMARY STATS TABLE -->
-<div class="card wt-detail-card mb-5">
-  <div class="card-header wt-detail-header">
-    <h5 class="mb-0"><i class="bi bi-table me-2"></i>Summary Statistics</h5>
+  {% if no_data %}
+  <div class="alert alert-warning">
+    No data available yet. Run <code>python manage.py seed_data</code> or
+    <code>python manage.py fetch_data</code> to load records.
   </div>
-  <div class="card-body p-0">
-    <div class="table-responsive">
-      <table class="table table-striped table-hover wt-table mb-0">
-        <thead>
+  {% else %}
+
+  <!-- Summary stats table -->
+  <div class="card mb-5">
+    <div class="card-header"><strong>Summary statistics</strong></div>
+    <div class="card-body p-0">
+      <table class="table table-striped table-hover mb-0">
+        <thead class="table-dark">
           <tr>
             <th>Metric</th>
-            <th>Count</th>
-            <th>Mean</th>
-            <th>Min</th>
-            <th>Max</th>
+            <th>Temp max (°C)</th>
+            <th>Temp min (°C)</th>
+            <th>Precipitation (mm)</th>
+            <th>Wind speed (km/h)</th>
           </tr>
         </thead>
         <tbody>
+          {% for stat in stats_rows %}
           <tr>
-            <td><i class="bi bi-thermometer-high me-1 wt-temp-hot"></i>Max Temperature (°C)</td>
-            <td>{{ summary.temperature_max.count|floatformat:0 }}</td>
-            <td>{{ summary.temperature_max.mean|floatformat:2 }}</td>
-            <td>{{ summary.temperature_max.min|floatformat:2 }}</td>
-            <td>{{ summary.temperature_max.max|floatformat:2 }}</td>
+            <td><strong>{{ stat.label }}</strong></td>
+            <td>{{ stat.temperature_max }}</td>
+            <td>{{ stat.temperature_min }}</td>
+            <td>{{ stat.precipitation_sum }}</td>
+            <td>{{ stat.wind_speed_max }}</td>
           </tr>
-          <tr>
-            <td><i class="bi bi-thermometer-low me-1 wt-temp-cool"></i>Min Temperature (°C)</td>
-            <td>{{ summary.temperature_min.count|floatformat:0 }}</td>
-            <td>{{ summary.temperature_min.mean|floatformat:2 }}</td>
-            <td>{{ summary.temperature_min.min|floatformat:2 }}</td>
-            <td>{{ summary.temperature_min.max|floatformat:2 }}</td>
-          </tr>
-          <tr>
-            <td><i class="bi bi-cloud-rain me-1"></i>Precipitation (mm)</td>
-            <td>{{ summary.precipitation_sum.count|floatformat:0 }}</td>
-            <td>{{ summary.precipitation_sum.mean|floatformat:2 }}</td>
-            <td>{{ summary.precipitation_sum.min|floatformat:2 }}</td>
-            <td>{{ summary.precipitation_sum.max|floatformat:2 }}</td>
-          </tr>
-          <tr>
-            <td><i class="bi bi-wind me-1"></i>Wind Speed (km/h)</td>
-            <td>{{ summary.wind_speed_max.count|floatformat:0 }}</td>
-            <td>{{ summary.wind_speed_max.mean|floatformat:2 }}</td>
-            <td>{{ summary.wind_speed_max.min|floatformat:2 }}</td>
-            <td>{{ summary.wind_speed_max.max|floatformat:2 }}</td>
-          </tr>
+          {% endfor %}
         </tbody>
       </table>
     </div>
   </div>
+
+  <!-- Chart row 1 -->
+  <div class="row mb-5">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header"><strong>Daily max temperature by city (line chart)</strong></div>
+        <div class="card-body">
+          <canvas id="lineChart" height="100"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart row 2 -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header"><strong>Average max temperature per city (bar chart)</strong></div>
+        <div class="card-body">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header"><strong>Total precipitation per city (doughnut chart)</strong></div>
+        <div class="card-body">
+          <canvas id="doughnutChart"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endif %}
 </div>
 
-<!-- CHARTS ROW 1 -->
-<div class="row g-4 mb-4">
-
-  <!-- LINE CHART -->
-  <div class="col-lg-8">
-    <div class="card wt-detail-card h-100">
-      <div class="card-header wt-detail-header">
-        <h5 class="mb-0">
-          <i class="bi bi-graph-up me-2"></i>
-          Q1: How does temperature change over time?
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <p class="text-muted small mb-3">
-          Average daily max temperature across all cities — identifying seasonal trends.
-        </p>
-        <canvas id="tempLineChart" height="120"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- PIE CHART -->
-  <div class="col-lg-4">
-    <div class="card wt-detail-card h-100">
-      <div class="card-header wt-detail-header">
-        <h5 class="mb-0">
-          <i class="bi bi-pie-chart me-2"></i>Records by City
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <p class="text-muted small mb-3">
-          Distribution of records across tracked cities.
-        </p>
-        <canvas id="cityPieChart" height="200"></canvas>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- CHARTS ROW 2 -->
-<div class="row g-4">
-
-  <!-- BAR: Avg Temp by City -->
-  <div class="col-lg-6">
-    <div class="card wt-detail-card h-100">
-      <div class="card-header wt-detail-header">
-        <h5 class="mb-0">
-          <i class="bi bi-bar-chart me-2"></i>
-          Q2: Which city has the highest avg temperature?
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <p class="text-muted small mb-3">
-          Average max temperature per city.
-        </p>
-        <canvas id="cityBarChart" height="200"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- BAR: Avg Precip by City -->
-  <div class="col-lg-6">
-    <div class="card wt-detail-card h-100">
-      <div class="card-header wt-detail-header">
-        <h5 class="mb-0">
-          <i class="bi bi-cloud-rain me-2"></i>
-          Q3: Which city gets the most rain?
-        </h5>
-      </div>
-      <div class="card-body p-4">
-        <p class="text-muted small mb-3">
-          Average daily precipitation per city.
-        </p>
-        <canvas id="precipBarChart" height="200"></canvas>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-{% endblock %}
-
-{% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-  const tempLineData  = {{ temp_line_json|safe }};
-  const cityPieData   = {{ city_pie_json|safe }};
-  const cityBarData   = {{ city_bar_json|safe }};
-  const precipBarData = {{ precip_bar_json|safe }};
+  const tempByCity = {{ temp_by_city_json|safe }};
+  const barData    = {{ bar_chart_json|safe }};
+  const precipData = {{ precip_chart_json|safe }};
 
-  const CITY_COLORS = [
-    'rgba(0,188,188,0.85)',
-    'rgba(255,140,0,0.85)',
-    'rgba(30,120,220,0.85)',
-  ];
+  const COLORS = ['#378ADD', '#1D9E75', '#D85A30'];
 
-  new Chart(document.getElementById('tempLineChart'), {
+  // Line chart — one dataset per city
+  const lineDatasets = Object.entries(tempByCity).map(([city, d], i) => ({
+    label: city,
+    data: d.values,
+    borderColor: COLORS[i % COLORS.length],
+    backgroundColor: 'transparent',
+    tension: 0.3,
+    pointRadius: 3,
+  }));
+
+  new Chart(document.getElementById('lineChart'), {
     type: 'line',
     data: {
-      labels: tempLineData.labels,
-      datasets: [{
-        label: 'Avg Max Temp (°C)',
-        data: tempLineData.values,
-        borderColor: 'rgba(0,188,188,1)',
-        backgroundColor: 'rgba(0,188,188,0.1)',
-        borderWidth: 2.5,
-        pointRadius: 3,
-        tension: 0.4,
-        fill: true,
-      }]
+      labels: Object.values(tempByCity)[0]?.labels || [],
+      datasets: lineDatasets,
     },
     options: {
       responsive: true,
+      plugins: { legend: { position: 'top' } },
       scales: {
-        x: { ticks: { maxTicksLimit: 12 } },
-        y: { title: { display: true, text: '°C' } }
-      }
-    }
-  });
-
-  new Chart(document.getElementById('cityPieChart'), {
-    type: 'pie',
-    data: {
-      labels: cityPieData.labels,
-      datasets: [{
-        data: cityPieData.values,
-        backgroundColor: CITY_COLORS,
-        borderWidth: 2,
-      }]
+        y: { title: { display: true, text: 'Temperature (°C)' } },
+        x: { title: { display: true, text: 'Date' } },
+      },
     },
-    options: {
-      responsive: true,
-      plugins: { legend: { position: 'bottom' } }
-    }
   });
 
-  new Chart(document.getElementById('cityBarChart'), {
+  // Bar chart — avg temp per city
+  new Chart(document.getElementById('barChart'), {
     type: 'bar',
     data: {
-      labels: cityBarData.labels,
+      labels: barData.labels,
       datasets: [{
-        label: 'Avg Max Temp (°C)',
-        data: cityBarData.values,
-        backgroundColor: CITY_COLORS,
-        borderRadius: 6,
-      }]
+        label: 'Avg max temp (°C)',
+        data: barData.values,
+        backgroundColor: COLORS,
+      }],
     },
     options: {
       responsive: true,
       plugins: { legend: { display: false } },
-      scales: { y: { title: { display: true, text: '°C' } } }
-    }
+      scales: { y: { title: { display: true, text: '°C' } } },
+    },
   });
 
-  new Chart(document.getElementById('precipBarChart'), {
-    type: 'bar',
+  // Doughnut chart — total precip per city
+  new Chart(document.getElementById('doughnutChart'), {
+    type: 'doughnut',
     data: {
-      labels: precipBarData.labels,
+      labels: precipData.labels,
       datasets: [{
-        label: 'Avg Precipitation (mm)',
-        data: precipBarData.values,
-        backgroundColor: CITY_COLORS,
-        borderRadius: 6,
-      }]
+        data: precipData.values,
+        backgroundColor: COLORS,
+      }],
     },
     options: {
       responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { title: { display: true, text: 'mm' }, beginAtZero: true } }
-    }
+      plugins: { legend: { position: 'bottom' } },
+    },
   });
 </script>
 {% endblock %}
