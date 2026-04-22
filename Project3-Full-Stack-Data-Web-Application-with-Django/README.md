@@ -13,7 +13,14 @@
 This project is a full-stack Django web application that collects, stores, and visualizes daily weather data for three Florida-region cities: Tallahassee, Miami, and Atlanta. It builds on the automated data pipeline from Project 2, integrating the Open-Meteo API into a navigable website with CRUD functionality and an analytics dashboard powered by pandas and Chart.js.
  
 The real-world purpose is to simulate how organizations track and analyze weather patterns over time for planning, forecasting, and decision-making.
- 
+
+ python manage.py check --deploy --settings=config.settings.prod
+System check identified 3 issues (0 silenced).
+WARNINGS:
+?: (security.W005) SECURE_HSTS_INCLUDE_SUBDOMAINS not set to True.
+?: (security.W009) SECRET_KEY is a development key — replace with a long random value in production.
+?: (security.W021) SECURE_HSTS_PRELOAD not set to True.
+Note: W009 is expected in development. Replace SECRET_KEY in .env with a strong key before deploying to production.
 ## Links
  
 - **Dataset:** Project 2 weather CSV (`data/raw/weather_data.csv`)
