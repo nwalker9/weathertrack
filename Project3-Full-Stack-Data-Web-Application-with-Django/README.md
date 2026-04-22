@@ -14,13 +14,16 @@ This project is a full-stack Django web application that collects, stores, and v
  
 The real-world purpose is to simulate how organizations track and analyze weather patterns over time for planning, forecasting, and decision-making.
 
- python manage.py check --deploy --settings=config.settings.prod
+python manage.py check --deploy --settings=config.settings.prod
 System check identified 3 issues (0 silenced).
+
 WARNINGS:
 ?: (security.W005) SECURE_HSTS_INCLUDE_SUBDOMAINS not set to True.
-?: (security.W009) SECRET_KEY is a development key — replace with a long random value in production.
+?: (security.W009) SECRET_KEY is a development key — replace in production.
 ?: (security.W021) SECURE_HSTS_PRELOAD not set to True.
-Note: W009 is expected in development. Replace SECRET_KEY in .env with a strong key before deploying to production.
+
+Note: All warnings, no critical errors.
+
 ## Links
  
 - **Dataset:** Project 2 weather CSV (`data/raw/weather_data.csv`)
