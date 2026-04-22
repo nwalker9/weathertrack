@@ -104,6 +104,19 @@ The dashboard at `/analytics/` answers three research questions from Project 1:
 - **Q1:** How does temperature change over time? (line chart)
 - **Q2:** Which city has the highest average temperature? (bar chart)
 - **Q3:** Which city gets the most rain? (doughnut chart)
+
+## Deploy Check
+```
+python manage.py check --deploy --settings=config.settings.prod
+System check identified 3 issues (0 silenced).
+
+WARNINGS:
+?: (security.W005) SECURE_HSTS_INCLUDE_SUBDOMAINS not set to True.
+?: (security.W009) SECRET_KEY is a development key — replace in production.
+?: (security.W021) SECURE_HSTS_PRELOAD not set to True.
+
+Note: All warnings, no critical errors.
+```
 ## Scheduling
  
 To run the pipeline automatically every day (Linux/Mac):
