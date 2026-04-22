@@ -1,70 +1,128 @@
+import json
+import pandas as pd
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.core.paginator import Paginator
+from django.contrib import messages
+from django.views.decorators.http import require_POST
+from django.contrib.admin.views.decorators import staff_member_required
+from django.core.management import call_command
 from .models import WeatherRecord, City
 from .forms import WeatherRecordForm
 
-def home(request):
-    city_count = City.objects.count()
-    record_count = WeatherRecord.objects.count()
 
+def home(request):
+    total_records = WeatherRecord.objects.count()
+    cities = City.objects.all()
+    latest = WeatherRecord.objects.select_related('city')[:5]
     return render(request, 'myapp/home.html', {
-        'city_count': city_count,
-        'record_count': record_count
+        'total_records': total_records,
+        'cities': cities,
+        'latest': latest,
     })
+
 
 def record_list(request):
     records = WeatherRecord.objects.select_related('city').all()
-
     paginator = Paginator(records, 20)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    return render(request, 'myapp/list.html', {'page_obj': page_obj})
 
-    return render(request, 'myapp/list.html', {
-        'page_obj': page_obj
-    })
 
 def record_detail(request, pk):
-    record = get_object_or_404(WeatherRecord, pk=pk)
+    record = get_object_or_404(WeatherRecord.objects.select_related('city'), pk=pk)
+    return render(request, 'myapp/detail.html', {'record': record})
 
-    return render(request, 'myapp/detail.html', {
-        'record': record
-    })
 
 def record_create(request):
     if request.method == 'POST':
         form = WeatherRecordForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Record created successfully.')
             return redirect('record_list')
     else:
         form = WeatherRecordForm()
+    return render(request, 'myapp/form.html', {'form': form, 'title': 'Add record'})
 
-    return render(request, 'myapp/form.html', {'form': form})
+
+def record_update(request, pk):
+    record = get_object_or_404(WeatherRecord, pk=pk)
+    if request.method == 'POST':
+        form = WeatherRecordForm(request.POST, instance=record)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Record updated successfully.')
+            return redirect('record_detail', pk=pk)
+    else:
+        form = WeatherRecordForm(instance=record)
+    return render(request, 'myapp/form.html', {'form': form, 'title': 'Edit record'})
+
 
 def record_delete(request, pk):
     record = get_object_or_404(WeatherRecord, pk=pk)
-
     if request.method == 'POST':
         record.delete()
+        messages.success(request, 'Record deleted.')
         return redirect('record_list')
+    return render(request, 'myapp/confirm_delete.html', {'record': record})
 
-    return render(request, 'myapp/confirm_delete.html', {
-        'record': record
+
+def analytics(request):
+    qs = WeatherRecord.objects.select_related('city').values(
+        'city__name', 'date', 'temperature_max', 'temperature_min',
+        'precipitation_sum', 'wind_speed_max'
+    )
+    df = pd.DataFrame(list(qs))
+
+    if df.empty:
+        return render(request, 'myapp/analytics.html', {'no_data': True})
+
+    df['date'] = pd.to_datetime(df['date'])
+    df['month'] = df['date'].dt.to_period('M').astype(str)
+
+    # Chart 1 (line): average daily max temp per city over time
+    temp_by_city = {}
+    for city in df['city__name'].unique():
+        city_df = df[df['city__name'] == city].sort_values('date')
+        temp_by_city[city] = {
+            'labels': city_df['date'].dt.strftime('%Y-%m-%d').tolist(),
+            'values': city_df['temperature_max'].tolist(),
+        }
+
+    # Chart 2 (bar): average max temp per city
+    avg_temp = df.groupby('city__name')['temperature_max'].mean().round(1)
+    bar_chart = {
+        'labels': avg_temp.index.tolist(),
+        'values': avg_temp.values.tolist(),
+    }
+
+    # Chart 3 (doughnut): total precipitation per city
+    total_precip = df.groupby('city__name')['precipitation_sum'].sum().round(1)
+    precip_chart = {
+        'labels': total_precip.index.tolist(),
+        'values': total_precip.values.tolist(),
+    }
+
+    # Summary stats table
+    summary = df[['temperature_max', 'temperature_min', 'precipitation_sum', 'wind_speed_max']]\
+        .describe().round(2).to_dict()
+
+    return render(request, 'myapp/analytics.html', {
+        'temp_by_city_json': json.dumps(temp_by_city),
+        'bar_chart_json': json.dumps(bar_chart),
+        'precip_chart_json': json.dumps(precip_chart),
+        'summary': summary,
+        'cities': df['city__name'].unique().tolist(),
     })
 
-def about(request):
-    return render(request, "core/about.html")
 
-"""class TaskListView(ListView):
-    model = Task
-    template_name = "core/task_list.html"
-    context_object_name = 'tasks'
-
-    def get_queryset(self):
-        return Task.objects.filter(is_done=True)"""
-
-
-"""class TaskDetailView(DetailView):
-    model = Task
-    template_name = "core/task_detail.html"
-    context_object_name = 'task'   """ 
+@staff_member_required
+@require_POST
+def fetch_data(request):
+    try:
+        call_command('fetch_data')
+        messages.success(request, 'Data fetched successfully.')
+    except Exception as e:
+        messages.error(request, f'Fetch failed: {e}')
+    return redirect('home')
