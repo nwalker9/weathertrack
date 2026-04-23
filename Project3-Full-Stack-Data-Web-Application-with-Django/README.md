@@ -118,3 +118,26 @@ To run the pipeline automatically every day (Linux/Mac):
 ## Requirements
  
 See `requirements.txt`. Key dependencies: Django, pandas, requests, python-decouple, gunicorn, whitenoise.
+
+## Note on Dataset Continuity
+ 
+This project builds on the weather data pipeline from Project 2 using the Open-Meteo API. The analytics dashboard answers research questions about temperature trends, city comparisons, and precipitation patterns across Tallahassee, Miami, and Atlanta.
+
+## Video Walkthrough Summary
+ 
+**Homepage** — The homepage at `/` shows the app name WeatherTrack in the navbar with links to Records and Analytics. Cards show the three cities tracked, the weather metrics collected, and that data comes live from the Open-Meteo API.
+ 
+**Records page** — `/records/` shows a paginated table of all weather records. A search bar allows filtering by city name using GET parameters and Django Q objects. Each row links to a detail view showing all fields.
+ 
+**CRUD** — The Add Record page at `/records/add/` uses a Django ModelForm with Bootstrap styling and validation. Editing and deleting records are also supported, with a confirmation page before deletion.
+ 
+**Analytics dashboard** — `/analytics/` uses pandas to compute aggregations from the database and renders them as Chart.js charts:
+- Summary statistics table (count, mean, min, max for all weather metrics)
+- Line chart: how temperature changes over time per city
+- Bar chart: which city has the highest average temperature
+- Doughnut chart: total precipitation per city
+**Admin panel** — `/admin/` shows all three models (Cities, Weather Records, Data Runs) with customized list display, search, and filters.
+ 
+**Key code files:**
+- `models.py` — City, WeatherRecord (with ForeignKey, choices, validators), DataRun
+- `fetch_data.py` — pulls 4 weeks of data from Open-Meteo in 7-day chunks using update_or_create and retry logic
