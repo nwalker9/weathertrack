@@ -4,7 +4,7 @@
 ## Group Members
 - Abigail Uhl - ID: ATU22
 - Larry Shi - ID: LJS22J
-- Nicolas Walker
+- Nicolas Walker - ID: NW24E
 - Harsh Thakor - ID: HJT24B
 
 ## Project Description
