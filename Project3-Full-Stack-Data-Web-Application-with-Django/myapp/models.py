@@ -53,3 +53,33 @@ class DataRun(models.Model):
  
     def __str__(self):
         return f"{self.city.name} — {self.run_timestamp:%Y-%m-%d %H:%M}"
+
+class Player(models.Model):
+    LEVEL_CHOICES = [
+        ('Elite', 'Elite'),
+        ('Gold', 'Gold'),
+        ('Silver', 'Silver'),
+        ('Bronze', 'Bronze'),
+    ]
+
+    name = models.CharField(max_length=100)
+    nationality = models.CharField(max_length=100)
+    national_position = models.CharField(max_length=50, blank=True, null=True)
+    club = models.CharField(max_length=100)
+    club_position = models.CharField(max_length=50, blank=True, null=True)
+    rating = models.IntegerField()
+    height = models.CharField(max_length=20, blank=True, null=True)
+    weight = models.CharField(max_length=20, blank=True, null=True)
+    age = models.IntegerField()
+    skill_moves = models.IntegerField(default=0)
+    ball_control = models.FloatField(default=0)
+    dribbling = models.FloatField(default=0)
+    speed = models.FloatField(default=0)
+    strength = models.FloatField(default=0)
+    player_level = models.CharField(max_length=20, choices=LEVEL_CHOICES, default='Bronze')
+
+    class Meta:
+        ordering = ['-rating']
+
+    def __str__(self):
+        return f"{self.name} ({self.club})"
