@@ -1,1 +1,107 @@
+{% extends "myapp/base.html" %}
+{% load static %}
 
+{% block title %}{{ player.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-3">
+    <a href="{% url 'player_list' %}" class="btn btn-outline-secondary">← Back to Players</a>
+  </div>
+
+  <div class="row">
+    <!-- Main info card -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-dark text-white">
+          <h4 class="mb-0">{{ player.name }}</h4>
+        </div>
+        <div class="card-body">
+          <table class="table table-borderless mb-0">
+            <tr><td><strong>Club</strong></td><td>{{ player.club }}</td></tr>
+            <tr><td><strong>Position</strong></td><td>{{ player.club_position }}</td></tr>
+            <tr><td><strong>Nationality</strong></td><td>{{ player.nationality }}</td></tr>
+            <tr><td><strong>Age</strong></td><td>{{ player.age }}</td></tr>
+            <tr><td><strong>Height</strong></td><td>{{ player.height }}</td></tr>
+            <tr><td><strong>Weight</strong></td><td>{{ player.weight }}</td></tr>
+            <tr><td><strong>Level</strong></td><td>
+              <span class="badge bg-primary">{{ player.player_level }}</span>
+            </td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats card -->
+    <div class="col-md-8 mb-4">
+      <div class="card h-100">
+        <div class="card-header bg-dark text-white">
+          <h5 class="mb-0">Player Stats</h5>
+        </div>
+        <div class="card-body">
+          <!-- Rating -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Overall Rating</strong>
+              <span>{{ player.rating }}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-warning" style="width: {{ player.rating }}%"></div>
+            </div>
+          </div>
+          <!-- Speed -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Speed</strong>
+              <span>{{ player.speed }}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-success" style="width: {{ player.speed }}%"></div>
+            </div>
+          </div>
+          <!-- Strength -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Strength</strong>
+              <span>{{ player.strength }}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-danger" style="width: {{ player.strength }}%"></div>
+            </div>
+          </div>
+          <!-- Dribbling -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Dribbling</strong>
+              <span>{{ player.dribbling }}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-info" style="width: {{ player.dribbling }}%"></div>
+            </div>
+          </div>
+          <!-- Ball Control -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Ball Control</strong>
+              <span>{{ player.ball_control }}</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-primary" style="width: {{ player.ball_control }}%"></div>
+            </div>
+          </div>
+          <!-- Skill Moves -->
+          <div class="mb-3">
+            <div class="d-flex justify-content-between">
+              <strong>Skill Moves</strong>
+              <span>{{ player.skill_moves }} / 5</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar bg-secondary" style="width: {% widthratio player.skill_moves 5 100 %}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
