@@ -11,15 +11,16 @@ from .forms import WeatherRecordForm
 
 
 def home(request):
-    total_records = WeatherRecord.objects.count()
+    record_count = WeatherRecord.objects.count()
+    player_count = Player.objects.count()
     cities = City.objects.all()
     latest = WeatherRecord.objects.select_related('city')[:5]
     return render(request, 'myapp/home.html', {
-        'total_records': total_records,
+        'record_count': record_count,
+        'player_count': player_count,
         'cities': cities,
         'latest': latest,
     })
-
 
 def record_list(request):
     query = request.GET.get('q', '')
