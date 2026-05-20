@@ -1,7 +1,7 @@
 {% extends 'myapp/base.html' %}
 {% load static %}
 
-{% block title %}WeatherTrack — Home{% endblock %}
+{% block title %}DataTrack — Home{% endblock %}
 
 {% block content %}
 
@@ -9,23 +9,24 @@
 <div class="wt-hero rounded-3 mb-5 p-5">
   <div class="row align-items-center">
     <div class="col-lg-7">
-      <p class="wt-hero-eyebrow">CIS4930 · Group 12 · Project 3</p>
-      <h1 class="wt-hero-title">Florida Weather<br>Dashboard</h1>
+      <p class="wt-hero-eyebrow">Data Analytics Platform</p>
+      <h1 class="wt-hero-title">DataTrack</h1>
       <p class="wt-hero-desc">
-        Analyze weather trends for Tallahassee, Miami, Orlando, and more.
-        Live data powered by the Open-Meteo API.
+        A multi-dataset analytics platform that collects, stores, and visualizes
+        real-world data. Explore live weather trends and FIFA player statistics
+        through interactive dashboards.
       </p>
       <div class="d-flex flex-wrap gap-3 mt-4">
         <a href="{% url 'record_list' %}" class="btn wt-btn-primary">
-          <i class="bi bi-table me-2"></i>View Records
+          <i class="bi bi-cloud-sun me-2"></i>Weather Data
         </a>
-        <a href="{% url 'analytics' %}" class="btn wt-btn-outline">
-          <i class="bi bi-bar-chart-line me-2"></i>Analytics
+        <a href="{% url 'player_list' %}" class="btn wt-btn-outline">
+          <i class="bi bi-people me-2"></i>FIFA Players
         </a>
       </div>
     </div>
     <div class="col-lg-5 text-center mt-4 mt-lg-0">
-      <i class="bi bi-cloud-sun-rain wt-hero-icon"></i>
+      <i class="bi bi-graph-up wt-hero-icon"></i>
     </div>
   </div>
 </div>
@@ -36,10 +37,10 @@
   <div class="col-md-4">
     <div class="card wt-stat-card h-100">
       <div class="card-body text-center p-4">
-        <i class="bi bi-geo-alt-fill wt-stat-icon mb-3 d-block"></i>
-        <h3 class="wt-stat-number">{{ city_count }}</h3>
-        <p class="wt-stat-label mb-1">Cities Tracked</p>
-        <p class="wt-stat-detail">Tallahassee · Miami · Orlando</p>
+        <i class="bi bi-cloud-sun-fill wt-stat-icon mb-3 d-block"></i>
+        <h3 class="wt-stat-number">{{ record_count }}</h3>
+        <p class="wt-stat-label mb-1">Weather Records</p>
+        <p class="wt-stat-detail">Tallahassee · Miami · Atlanta</p>
       </div>
     </div>
   </div>
@@ -47,10 +48,10 @@
   <div class="col-md-4">
     <div class="card wt-stat-card wt-stat-card--accent h-100">
       <div class="card-body text-center p-4">
-        <i class="bi bi-thermometer-half wt-stat-icon mb-3 d-block"></i>
-        <h3 class="wt-stat-number">{{ record_count }}</h3>
-        <p class="wt-stat-label mb-1">Weather Records</p>
-        <p class="wt-stat-detail">Temperature · Rain · Wind</p>
+        <i class="bi bi-people-fill wt-stat-icon mb-3 d-block"></i>
+        <h3 class="wt-stat-number">{{ player_count }}</h3>
+        <p class="wt-stat-label mb-1">FIFA Players</p>
+        <p class="wt-stat-detail">FIFA 2017 · 16 attributes</p>
       </div>
     </div>
   </div>
@@ -68,8 +69,48 @@
 
 </div>
 
-<!-- FEATURE CARDS -->
-<h2 class="wt-section-title mb-4">What This App Does</h2>
+<!-- DATASETS -->
+<h2 class="wt-section-title mb-4">Datasets</h2>
+<div class="row g-4 mb-5">
+
+  <div class="col-md-6">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-cloud-sun wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">Weather Data</h5>
+        <p class="wt-feature-desc">
+          Daily weather records for Tallahassee, Miami, and Atlanta pulled live
+          from the Open-Meteo API. Tracks temperature, precipitation, and wind speed.
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="{% url 'record_list' %}" class="btn btn-sm btn-outline-primary">View Records</a>
+          <a href="{% url 'analytics' %}" class="btn btn-sm btn-outline-secondary">Analytics</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card wt-feature-card h-100">
+      <div class="card-body p-4">
+        <i class="bi bi-trophy wt-feature-icon"></i>
+        <h5 class="wt-feature-title mt-3">FIFA 2017 Players</h5>
+        <p class="wt-feature-desc">
+          Over 17,000 FIFA 2017 player records with ratings, physical attributes,
+          and skill stats. Explore performance trends by position, age, and level.
+        </p>
+        <div class="d-flex gap-2 mt-3">
+          <a href="{% url 'player_list' %}" class="btn btn-sm btn-outline-primary">View Players</a>
+          <a href="{% url 'player_analytics' %}" class="btn btn-sm btn-outline-secondary">Analytics</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FEATURES -->
+<h2 class="wt-section-title mb-4">Platform Features</h2>
 <div class="row g-4">
 
   <div class="col-md-6 col-lg-3">
@@ -78,7 +119,7 @@
         <i class="bi bi-database-fill-add wt-feature-icon"></i>
         <h5 class="wt-feature-title mt-3">Data Collection</h5>
         <p class="wt-feature-desc">
-          Ingests daily weather data via the Open-Meteo API for multiple cities.
+          Live API pipeline ingests daily weather data automatically via Open-Meteo.
         </p>
       </div>
     </div>
@@ -112,9 +153,9 @@
     <div class="card wt-feature-card h-100">
       <div class="card-body p-4">
         <i class="bi bi-search wt-feature-icon"></i>
-        <h5 class="wt-feature-title mt-3">EDA Insights</h5>
+        <h5 class="wt-feature-title mt-3">Search & Filter</h5>
         <p class="wt-feature-desc">
-          Answers research questions from Project 1's exploratory data analysis.
+          Search weather records by city and filter FIFA players by position and level.
         </p>
       </div>
     </div>
