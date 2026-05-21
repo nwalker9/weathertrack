@@ -1,38 +1,130 @@
-# Real-World Data Storytelling – Group 12
-# FIFA Player Data Storytelling Project
+# DataTrack
 
-## Group Members
-- Abigail Uhl - ID: ATU22
-- Larry Shi - ID: LJS22J
-- Nicolas Walker - ID: NW24E
-- Harsh Thakor - ID: HJT24B
+A full-stack data analytics web application built with Django. DataTrack collects, stores, and visualizes real-world datasets through interactive dashboards — currently featuring live weather data and FIFA 2017 player statistics.
 
-## Project Description
-This project analyzes a real-world FIFA soccer player dataset in the 2017 game to uncover patterns and relationships between player characteristics and overall performance ratings. The goal is to use data cleaning, transformation, statistical analysis, and visualization techniques to tell a meaningful data story. Using pandas, NumPy, matplotlib, and seaborn, we clean, transform, summarize, and visualize the data. By exploring variables, this project identifies trends that help explain what factors are associated with higher-rated players.
+## Live Demo
 
+> Run locally — see setup instructions below.
 
-## Dataset Source
-- FIFA 2017 Player dataset source: https://www.kaggle.com/datasets/artimous/complete-fifa-2017-player-dataset-global
+## Tech Stack
 
-## Why this dataset fits the project
-This dataset satisfies all project requirements:
-- Contains more than 500 rows and fewer than 50,000 rows  
-- Includes numerous **numeric columns** (e.g., Rating, Age, Dribbling, Speed, Strength)  
-- Includes multiple **categorical columns** (e.g., Nationality, Club, Position)  
-- Represents a **real-world context** involving sports performance and analytics  
+- **Backend:** Python, Django 6, pandas
+- **Frontend:** Bootstrap 5, Chart.js, Bootstrap Icons
+- **Database:** SQLite
+- **APIs:** Open-Meteo Weather API
+- **Deployment ready:** gunicorn, whitenoise, python-decouple
 
-## Research Questions
-1. How do player physical attributes (speed and strength) change with age? (Line Plot)
-2. Which club positions have the highest average speed? (Bar Plot)
-3. What is the distribution of player ratings? (Histogram)
-4. What is the relationship between dribbling ability and ball control? (Scatter Plot)
+## Features
 
-## Repo Structure
-- `data/raw/` → original dataset
-- `data/processed/` → cleaned dataset
-- `analysis.ipynb` → main notebook
-- `figures/` → exported plots
+### Weather Dataset
+- Live daily weather data for Tallahassee, Miami, and Atlanta via the Open-Meteo API
+- Automated data pipeline (`fetch_data` management command) fetches 4 weeks of data in paginated chunks
+- Full CRUD — create, view, edit, and delete weather records
+- Search by city name
+- Analytics dashboard with line, bar, and doughnut charts powered by pandas aggregations
 
-## Team Workflow
-We used GitHub to organize the project, commit regularly, and submit work across cleaning, analysis, visualization, and documentation.
+### FIFA 2017 Players Dataset
+- 17,583 player records with 16 attributes (rating, speed, strength, dribbling, ball control, etc.)
+- Search by name, filter by position and player level
+- Detail page with progress bar stats for each attribute
+- Analytics dashboard with 4 Chart.js charts:
+  - Speed and strength trends by age (line chart)
+  - Average speed by position (bar chart)
+  - Player level distribution (doughnut chart)
+  - Dribbling vs ball control relationship (scatter chart)
 
+### Platform
+- Responsive Bootstrap 5 navbar with mobile hamburger
+- Django admin panel with customized list display, search, and filters
+- Paginated list views (25 records per page)
+- Split settings for development and production (`base.py`, `dev.py`, `prod.py`)
+- Environment variables managed via `.env` and `python-decouple`
+
+## Screenshots
+
+### Homepage
+![Homepage](Project3-Full-Stack-Data-Web-Application-with-Django/screenshots/homepage.png)
+
+### Weather Records
+![Records](Project3-Full-Stack-Data-Web-Application-with-Django/screenshots/records.png)
+
+### Analytics Dashboard
+![Analytics](Project3-Full-Stack-Data-Web-Application-with-Django/screenshots/Analytics.png)
+
+## Setup
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/nwalker9/weathertrack.git
+cd weathertrack/Project3-Full-Stack-Data-Web-Application-with-Django
+
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Create a .env file with:
+# SECRET_KEY=your-secret-key-here
+# DEBUG=True
+# ALLOWED_HOSTS=localhost,127.0.0.1
+
+# 4. Run migrations
+python manage.py migrate
+
+# 5. Load weather data
+python manage.py seed_data
+
+# 6. Load FIFA player data
+python manage.py seed_players
+
+# 7. Start the server
+python manage.py runserver
+```
+
+Open `http://127.0.0.1:8000` in your browser.
+
+## Data Pipeline
+
+Fetch fresh weather data from the Open-Meteo API:
+
+```bash
+python manage.py fetch_data
+```
+
+Fetches 4 weeks of daily weather data for all 3 cities in 7-day chunks using `update_or_create` to avoid duplicates. Can be scheduled with cron:
+
+```
+0 6 * * * python manage.py fetch_data
+```
+
+## Project Structure
+
+```
+Project3-Full-Stack-Data-Web-Application-with-Django/
+├── config/
+│   ├── settings/
+│   │   ├── base.py
+│   │   ├── dev.py
+│   │   └── prod.py
+│   ├── urls.py
+│   └── wsgi.py
+├── myapp/
+│   ├── management/commands/
+│   │   ├── seed_data.py
+│   │   ├── seed_players.py
+│   │   └── fetch_data.py
+│   ├── templates/myapp/
+│   ├── models.py
+│   ├── views.py
+│   ├── forms.py
+│   └── urls.py
+├── data/raw/
+│   └── weather_data.csv
+├── requirements.txt
+├── Procfile
+└── manage.py
+```
+
+## Developer
+
+**Nicolas Walker**  
+Computer Science — Florida State University  
+GitHub: [nwalker9](https://github.com/nwalker9)
