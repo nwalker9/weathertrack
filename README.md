@@ -128,3 +128,5 @@ Project3-Full-Stack-Data-Web-Application-with-Django/
 **Nicolas Walker**  
 Computer Science — Florida State University  
 GitHub: [nwalker9](https://github.com/nwalker9)
+LinkedIn: [nicolas-walker](https://www.linkedin.com/in/nicolas-walker-64a509334)
+
